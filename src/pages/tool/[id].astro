@@ -1,0 +1,27 @@
+---
+import { tools } from '../../tools/catalog';
+import Layout from '../../layouts/Layout.astro';
+import Home from '../../components/Home.astro';
+
+export function getStaticPaths() {
+  return tools.map(tool => ({ params: { id: tool.id }, props: { tool } }));
+}
+const { tool } = Astro.props;
+const { default: Tool } = await tool.load();
+---
+
+<Layout title={`${tool.title} · RuiTools`}>
+  <Home toolCategory={tool.category}>
+    <section class="tool-content">
+      <a href={'/?category=' + encodeURIComponent(tool.category)}>返回工具列表</a>
+      <h1>{tool.title}</h1>
+      <Tool />
+    </section>
+  </Home>
+</Layout>
+
+<style>
+  .tool-content { display: flow-root; padding-bottom: 16px; }
+  h1 { font-size: 20px; }
+  a { color: var(--color-primary); }
+</style>

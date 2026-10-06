@@ -1,0 +1,30 @@
+:root {
+  /* main */
+  --color-primary: #dce532;
+  --color-primary-background: #fbfce5;
+  --color-background: #f8f9fc;
+  --color-text-default: #292b39;
+  --color-text-default-secondary: #9293a2;
+
+  /* Header */
+  --color-background-header: #ffffff;
+  --color-border-header: #e9eaf1;
+
+  /* Footer */
+  --color-border-footer: #e9eaf1;
+
+  /* Sidebar */
+  --color-background-sidebar: #ffffff;
+  --color-border-sidebar: #e9eaf1;
+
+  /* Card */
+  --color-background-card: #ffffff;
+  --color-border-card: #e9eaf1;
+  --color-border-hover-card: #e8ebc1;
+  
+
+  
+  --color-surface: #ffffff;
+  --color-text-default-muted: #9293a2;
+  --color-border: #e9eaf1;
+}

@@ -1,0 +1,79 @@
+---
+import Footer from './Footer.astro';
+import Sidebar from './Sidebar.astro';
+import { categories, tools } from '../tools/catalog';
+interface Props { toolCategory?: string; }
+const { toolCategory } = Astro.props;
+---
+
+<div class="workspace">
+  <Sidebar categories={categories} tools={tools} activeCategory={toolCategory} />
+  <main>
+    {toolCategory ? <slot /> : <>
+    <section id="catalog" hidden>
+    <div class="cards">
+      {tools.map(tool => (
+        <a class="card" data-tool-category={tool.category} href={tool.url}>
+          <h3>{tool.name}</h3>
+          <p>{tool.description}</p>
+          <small>{categories.find(category => category.id === tool.category)?.name}</small>
+        </a>
+      ))}
+    </div>
+    <p class="coming">更多小工具，正在制作中</p>
+    
+    </section>
+    </>}
+    <Footer />
+  </main>
+</div>
+
+<script>
+  const catalog = document.getElementById('catalog');
+  const cards = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-tool-category]'));
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('nav [data-category]'));
+  function renderRoute() {
+    if (!catalog) return;
+    const id = new URLSearchParams(location.search).get('category');
+    const category = links.find(link => link.dataset.category === id)?.dataset.category ?? 'all';
+    // Filter before showing the catalog, including initial load and BFCache restore.
+    cards.forEach(card => { card.hidden = category !== 'all' && card.dataset.toolCategory !== category; });
+    links.forEach(link => {
+      if (link.dataset.category === category) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    catalog.hidden = false;
+  }
+  function navigate(url: string) {
+    if (location.href !== url) history.pushState(null, '', url);
+    renderRoute();
+  }
+  document.addEventListener('click', event => {
+    if (!catalog || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[data-category]') : null;
+    if (!target) return;
+    event.preventDefault();
+    navigate(target.href);
+  });
+  window.addEventListener('popstate', renderRoute);
+  window.addEventListener('pageshow', renderRoute);
+  renderRoute();
+</script>
+
+<style>
+  .workspace { display: grid; grid-template-columns: 200px minmax(0, 1fr); flex: 1; transition: grid-template-columns 200ms ease; }
+  .workspace.sidebar-collapsed { grid-template-columns: 0 minmax(0, 1fr); }
+  main { display: flex; flex-direction: column; min-width: 0; padding: 30px 40px 0; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+  .card { padding: 22px; border: 1px solid var(--color-border-card); border-radius: 12px; background: var(--color-background-card); }
+  .card:hover { border-color: var(--color-border-hover-card); }
+  h3 { margin: 0 0 12px; font-size: 15px; }
+  .card p { color: var(--color-text-default-secondary); font-size: 12px; line-height: 1.8; }
+  .card small, .coming { color: var(--color-text-default-secondary); font-size: 11px; }
+  .coming { text-align: center; padding: 24px 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .workspace { transition: none; }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import { Icon } from 'astro-icon/components';
+interface Props {
+  categories: { id: string; name: string; icon: string }[];
+  tools: { category: string }[];
+  activeCategory?: string;
+}
+const { categories, tools, activeCategory = 'all' } = Astro.props;
+---
+
+<aside data-sidebar>
+    <button
+      class="sidebar-toggle"
+      type="button"
+      aria-controls="tool-categories"
+      aria-expanded="true"
+      aria-label="折叠侧栏"
+      title="折叠侧栏"
+    >
+      <span class="icon-close" aria-hidden="true">
+        <Icon name="lucide:panel-left-close" size={20} />
+      </span>
+      <span class="icon-open" aria-hidden="true">
+        <Icon name="lucide:panel-left-open" size={20} />
+      </span>
+    </button>
+    <nav id="tool-categories" aria-label="工具分类">
+      <a href="/" data-category="all" aria-current={activeCategory === 'all' ? 'page' : undefined}>
+        <Icon name="lucide:layout-grid" size={20} aria-hidden="true" />
+        <span>全部工具</span><small>{tools.length}</small></a>
+      {categories.map(category => (
+        <a href={'/?category=' + encodeURIComponent(category.id)} data-category={category.id} aria-current={activeCategory === category.id ? 'page' : undefined}>
+          <Icon name={category.icon} size={20} aria-hidden="true" />
+          <span>{category.name}</span><small>{tools.filter(tool => tool.category === category.id).length}</small>
+        </a>
+      ))}
+    </nav>
+    <small class="version">RuiTools v0.1b</small>
+</aside>
+
+<script>
+  const sidebar = document.querySelector<HTMLElement>('[data-sidebar]');
+  const workspace = sidebar?.closest<HTMLElement>('.workspace');
+  const toggle = sidebar?.querySelector<HTMLButtonElement>('.sidebar-toggle');
+  const storageKey = 'ruitools-sidebar-collapsed';
+
+  function setCollapsed(collapsed: boolean) {
+    if (!sidebar || !workspace || !toggle) return;
+
+    sidebar.dataset.collapsed = String(collapsed);
+    workspace.classList.toggle('sidebar-collapsed', collapsed);
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+
+    const label = collapsed ? '展开侧栏' : '折叠侧栏';
+    toggle.setAttribute('aria-label', label);
+    toggle.title = label;
+  }
+
+  let initiallyCollapsed = false;
+  try {
+    initiallyCollapsed = localStorage.getItem(storageKey) === 'true';
+  } catch {
+    // The sidebar still works when storage is unavailable.
+  }
+  setCollapsed(initiallyCollapsed);
+
+  toggle?.addEventListener('click', () => {
+    const collapsed = sidebar?.dataset.collapsed !== 'true';
+    setCollapsed(collapsed);
+    try {
+      localStorage.setItem(storageKey, String(collapsed));
+    } catch {
+      // Keep the in-page state even when storage is unavailable.
+    }
+  });
+</script>
+
+<style>
+  aside { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 12px 12px; background:var(--color-background-sidebar); border-right: 1px solid var(--color-border-sidebar); }
+  .sidebar-toggle { position: absolute; top: 20px; right: -20px; z-index: 2; display: grid; width: 40px; height: 40px; padding: 0; place-items: center; color: var(--color-text-default-secondary); background: var(--color-background-sidebar); border: 1px solid var(--color-border-sidebar); border-radius: 50%; cursor: pointer; transition: right 200ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
+  .sidebar-toggle:hover { color: var(--color-text-default); border-color: var(--color-border-hover-card); box-shadow: 0 4px 12px rgb(41 43 57 / 10%); }
+  .sidebar-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  .sidebar-toggle .icon-close { display: flex; }
+  .sidebar-toggle .icon-open { display: none; }
+  .sidebar-toggle[aria-expanded='false'] .icon-close { display: none; }
+  .sidebar-toggle[aria-expanded='false'] .icon-open { display: flex; }
+  aside[data-collapsed='true'] { padding-inline: 0; border-right-color: transparent; }
+  aside[data-collapsed='true'] nav,
+  aside[data-collapsed='true'] .version { visibility: hidden; pointer-events: none; }
+  aside[data-collapsed='true'] .sidebar-toggle { right: -40px; }
+  .nav-heading, nav p, .version { color: var(--color-text-default-secondary); font-size: 12px; }
+  .nav-heading, nav p { padding: 0 12px; }
+  nav p { margin-top: 28px; }
+  nav a { display: inline-flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 12px; border-radius: 8px; }
+  nav a :global(svg) { flex-shrink: 0; }
+  nav a small { margin-left: auto; }
+  .version { margin-top: auto; padding: 30px 12px 0; }
+  [aria-current] { background: var(--color-primary-background); color: var(--color-primary); }
+
+</style>
