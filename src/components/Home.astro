@@ -39,7 +39,7 @@ const { toolCategory } = Astro.props;
     // Filter before showing the catalog, including initial load and BFCache restore.
     cards.forEach(card => { card.hidden = category !== 'all' && card.dataset.toolCategory !== category; });
     links.forEach(link => {
-      if (link.dataset.category === category) link.setAttribute('aria-current', 'page');
+      if (link.dataset.category === category) link.setAttribute('aria-current', 'true');
       else link.removeAttribute('aria-current');
     });
     catalog.hidden = false;
@@ -61,7 +61,7 @@ const { toolCategory } = Astro.props;
 </script>
 
 <style>
-  .workspace { display: grid; grid-template-columns: 200px minmax(0, 1fr); flex: 1; transition: grid-template-columns 200ms ease; }
+  .workspace { display: grid; grid-template-columns: 200px minmax(0, 1fr); flex: 1; transition: grid-template-columns 300ms ease; }
   .workspace.sidebar-collapsed { grid-template-columns: 0 minmax(0, 1fr); }
   main { display: flex; flex-direction: column; min-width: 0; padding: 30px 40px 0; }
 

@@ -12,25 +12,22 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
     <button
       class="sidebar-toggle"
       type="button"
-      aria-controls="tool-categories"
-      aria-expanded="true"
-      aria-label="折叠侧栏"
       title="折叠侧栏"
     >
-      <span class="icon-close" aria-hidden="true">
+      <span class="icon-close">
         <Icon name="lucide:panel-left-close" size={20} />
       </span>
-      <span class="icon-open" aria-hidden="true">
+      <span class="icon-open">
         <Icon name="lucide:panel-left-open" size={20} />
       </span>
     </button>
-    <nav id="tool-categories" aria-label="工具分类">
-      <a href="/" data-category="all" aria-current={activeCategory === 'all' ? 'page' : undefined}>
-        <Icon name="lucide:layout-grid" size={20} aria-hidden="true" />
+    <nav id="tool-categories">
+      <a href="/" data-category="all" aria-current={activeCategory === 'all' ? 'true' : undefined}>
+        <Icon name="lucide:layout-grid" size={20}/>
         <span>全部工具</span><small>{tools.length}</small></a>
       {categories.map(category => (
-        <a href={'/?category=' + encodeURIComponent(category.id)} data-category={category.id} aria-current={activeCategory === category.id ? 'page' : undefined}>
-          <Icon name={category.icon} size={20} aria-hidden="true" />
+        <a href={'/?category=' + encodeURIComponent(category.id)} data-category={category.id} aria-current={activeCategory === category.id ? 'true' : undefined}>
+          <Icon name={category.icon} size={20}/>
           <span>{category.name}</span><small>{tools.filter(tool => tool.category === category.id).length}</small>
         </a>
       ))}
@@ -49,10 +46,8 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
 
     sidebar.dataset.collapsed = String(collapsed);
     workspace.classList.toggle('sidebar-collapsed', collapsed);
-    toggle.setAttribute('aria-expanded', String(!collapsed));
 
     const label = collapsed ? '展开侧栏' : '折叠侧栏';
-    toggle.setAttribute('aria-label', label);
     toggle.title = label;
   }
 
@@ -76,18 +71,20 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
 </script>
 
 <style>
-  aside { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 12px 12px; background:var(--color-background-sidebar); border-right: 1px solid var(--color-border-sidebar); }
-  .sidebar-toggle { position: absolute; top: 20px; right: -20px; z-index: 2; display: grid; width: 40px; height: 40px; padding: 0; place-items: center; color: var(--color-text-default-secondary); background: var(--color-background-sidebar); border: 1px solid var(--color-border-sidebar); border-radius: 50%; cursor: pointer; transition: right 200ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
-  .sidebar-toggle:hover { color: var(--color-text-default); border-color: var(--color-border-hover-card); box-shadow: 0 4px 12px rgb(41 43 57 / 10%); }
+  aside { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 64px 12px 12px; background:var(--color-background-sidebar); border-right: 1px solid var(--color-border-sidebar); transition: padding-inline 300ms ease, border-color 300ms ease; }
+  .sidebar-toggle { position: absolute; top: 24px; right: 12px; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; color: var(--color-text-default-secondary); font: inherit; background: transparent; border: 1px solid transparent; border-radius: 8px; box-shadow: 0 0 0 rgb(41 43 57 / 0%); cursor: pointer; transition: right 300ms ease, border-radius 300ms ease, border-color 300ms ease, box-shadow 300ms ease, color 160ms ease, background-color 300ms ease; }
+  .sidebar-toggle:hover { color: var(--color-text-default); background: var(--color-primary-background); }
+  .sidebar-toggle .icon-close, .sidebar-toggle .icon-open { flex-shrink: 0; }
   .sidebar-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-  .sidebar-toggle .icon-close { display: flex; }
-  .sidebar-toggle .icon-open { display: none; }
-  .sidebar-toggle[aria-expanded='false'] .icon-close { display: none; }
-  .sidebar-toggle[aria-expanded='false'] .icon-open { display: flex; }
+  .sidebar-toggle .icon-close, .sidebar-toggle .icon-open { display: flex; grid-area: 1 / 1; transition: opacity 300ms ease; }
+  .sidebar-toggle .icon-open { opacity: 0; }
+  aside[data-collapsed='true'] .icon-close { opacity: 0; }
+  aside[data-collapsed='true'] .icon-open { opacity: 1; }
   aside[data-collapsed='true'] { padding-inline: 0; border-right-color: transparent; }
   aside[data-collapsed='true'] nav,
   aside[data-collapsed='true'] .version { visibility: hidden; pointer-events: none; }
-  aside[data-collapsed='true'] .sidebar-toggle { right: -40px; }
+  aside[data-collapsed='true'] .sidebar-toggle { right: -40px; background: var(--color-background-sidebar); border-color: var(--color-border-sidebar); border-radius:0px 8px 8px 0px; box-shadow: 0 4px 12px rgb(41 43 57 / 10%); }
+  aside[data-collapsed='true'] .sidebar-toggle:hover { background: var(--color-primary-background); }
   .nav-heading, nav p, .version { color: var(--color-text-default-secondary); font-size: 12px; }
   .nav-heading, nav p { padding: 0 12px; }
   nav p { margin-top: 28px; }
@@ -95,6 +92,9 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
   nav a :global(svg) { flex-shrink: 0; }
   nav a small { margin-left: auto; }
   .version { margin-top: auto; padding: 30px 12px 0; }
-  [aria-current] { background: var(--color-primary-background); color: var(--color-primary); }
+  [aria-current='true'] { background: var(--color-primary-background); color: var(--color-primary); }
+  @media (prefers-reduced-motion: reduce) {
+    aside, .sidebar-toggle, .sidebar-toggle .icon-close, .sidebar-toggle .icon-open { transition: none; }
+  }
 
 </style>
