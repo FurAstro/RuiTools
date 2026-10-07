@@ -33,6 +33,6 @@ export const tools = Object.entries(documents).flatMap(([file, document]) => {
     const key = file.slice(0, file.lastIndexOf('/') + 1) + relative;
     const load = pages[key] ?? (() => import('./NotFound.astro'));
     if (!pages[key]) console.warn(`${file}: 找不到 ${data.page}，使用默认工具页面`);
-    return [{ ...data, name: data.title, url: `/tool/${data.id}`, load }];
+    return [{ ...data, name: data.title, url: `${import.meta.env.BASE_URL}tool/${data.id}/`, load }];
 }).sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id.localeCompare(b.id));
 export { categories };

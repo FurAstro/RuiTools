@@ -13,7 +13,7 @@ const { default: Tool } = await tool.load();
 <Layout title={`${tool.title} · RuiTools`}>
   <Home toolCategory={tool.category}>
     <section class="tool-content">
-      <a href={'/?category=' + encodeURIComponent(tool.category)}>返回工具列表</a>
+      <a href={import.meta.env.BASE_URL + '?category=' + encodeURIComponent(tool.category)}>返回工具列表</a>
       <h1>{tool.title}</h1>
       <Tool />
     </section>

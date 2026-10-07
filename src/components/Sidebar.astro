@@ -19,13 +19,13 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
       </span>
     </button>
     <nav id="tool-categories">
-      <CategoryItem id="all" name="全部工具" icon="lucide:layout-grid" href="/" count={tools.length} active={activeCategory === 'all'} />
+      <CategoryItem id="all" name="全部工具" icon="lucide:layout-grid" href={import.meta.env.BASE_URL} count={tools.length} active={activeCategory === 'all'} />
       {categories.map(category => (
         <CategoryItem
           id={category.id}
           name={category.name}
           icon={category.icon}
-          href={'/?category=' + encodeURIComponent(category.id)}
+          href={import.meta.env.BASE_URL + '?category=' + encodeURIComponent(category.id)}
           count={tools.filter(tool => tool.category === category.id).length}
           active={activeCategory === category.id}
         />

@@ -3,11 +3,11 @@ import { Icon } from "astro-icon/components";
 ---
 
 <header>
-  <a class="brand" href="/">
+  <a class="brand" href={import.meta.env.BASE_URL}>
     <span class="icon-box"><Icon name="lucide:blocks" size={24} /></span>
     <strong>Rui<span class="text">Tools</span></strong>
   </a>
-  <a class="home-link" href="/">
+  <a class="home-link" href={import.meta.env.BASE_URL}>
     <Icon name="lucide:house" size={20} />
     首页
   </a>
