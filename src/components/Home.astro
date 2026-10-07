@@ -20,22 +20,20 @@ const { toolCategory } = Astro.props;
       toolCategory ? (
         <slot />
       ) : (
-        <>
-          <section id="catalog" hidden>
-            <div class="cards">
-              {tools.map((tool) => (
-                <ToolCard
-                  tool={tool}
-                  categoryName={
-                    categories.find((category) => category.id === tool.category)
-                      ?.name
-                  }
-                />
-              ))}
-            </div>
-            <p class="coming">更多小工具，正在制作中</p>
-          </section>
-        </>
+        <section id="catalog" hidden>
+          <div class="cards">
+            {tools.map((tool) => (
+              <ToolCard
+                tool={tool}
+                categoryName={
+                  categories.find((category) => category.id === tool.category)
+                    ?.name
+                }
+              />
+            ))}
+          </div>
+          <p class="coming">更多小工具，正在制作中</p>
+        </section>
       )
     }
     <Footer />

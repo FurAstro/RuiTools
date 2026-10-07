@@ -1,0 +1,45 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  id: string;
+  name: string;
+  icon: string;
+  href: string;
+  count: number;
+  active?: boolean;
+}
+
+const { id, name, icon, href, count, active = false } = Astro.props;
+---
+
+<a href={href} data-category={id} aria-current={active ? "true" : undefined}>
+  <Icon name={icon} size={20} />
+  <span>{name}</span><small>{count}</small>
+</a>
+
+<style>
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    transition:
+      color 200ms ease,
+      background-color 200ms ease;
+  }
+  a :global(svg) {
+    flex-shrink: 0;
+  }
+  small {
+    margin-left: auto;
+  }
+  a:hover,
+  a[aria-current="true"] {
+    background: var(--color-primary-background);
+    color: var(--color-primary);
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import CategoryItem from './CategoryItem.astro';
 interface Props {
   categories: { id: string; name: string; icon: string }[];
   tools: { category: string }[];
@@ -18,14 +19,16 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
       </span>
     </button>
     <nav id="tool-categories">
-      <a href="/" data-category="all" aria-current={activeCategory === 'all' ? 'true' : undefined}>
-      <Icon name="lucide:layout-grid" size={20}/>
-      <span>全部工具</span><small>{tools.length}</small></a>
+      <CategoryItem id="all" name="全部工具" icon="lucide:layout-grid" href="/" count={tools.length} active={activeCategory === 'all'} />
       {categories.map(category => (
-        <a href={'/?category=' + encodeURIComponent(category.id)} data-category={category.id} aria-current={activeCategory === category.id ? 'true' : undefined}>
-          <Icon name={category.icon} size={20}/>
-          <span>{category.name}</span><small>{tools.filter(tool => tool.category === category.id).length}</small>
-        </a>
+        <CategoryItem
+          id={category.id}
+          name={category.name}
+          icon={category.icon}
+          href={'/?category=' + encodeURIComponent(category.id)}
+          count={tools.filter(tool => tool.category === category.id).length}
+          active={activeCategory === category.id}
+        />
       ))}
     </nav>
     <small class="version">RuiTools v0.1b</small>
@@ -159,35 +162,9 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
   nav p {
     margin-top: 28px;
   }
-  nav a {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    transition:
-      color 200ms ease,
-      background-color 200ms ease;
-  }
-  nav a :global(svg) {
-    flex-shrink: 0;
-  }
-  nav a small {
-    margin-left: auto;
-  }
-  nav a:hover {
-    background: var(--color-primary-background);
-    color: var(--color-primary);
-  }
   .version {
     margin-top: auto;
     padding: 30px 12px 0;
-  }
-  [aria-current="true"] {
-    background: var(--color-primary-background);
-    color: var(--color-primary);
   }
 </style>
 
