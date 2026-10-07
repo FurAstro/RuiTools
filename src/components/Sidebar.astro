@@ -1,5 +1,5 @@
 ---
-import { Icon } from 'astro-icon/components';
+import { Icon } from "astro-icon/components";
 interface Props {
   categories: { id: string; name: string; icon: string }[];
   tools: { category: string }[];
@@ -9,11 +9,7 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
 ---
 
 <aside data-sidebar>
-    <button
-      class="sidebar-toggle"
-      type="button"
-      title="折叠侧栏"
-    >
+    <button class="sidebar-toggle" type="button" title="折叠侧栏" >
       <span class="icon-close">
         <Icon name="lucide:panel-left-close" size={20} />
       </span>
@@ -71,31 +67,127 @@ const { categories, tools, activeCategory = 'all' } = Astro.props;
 </script>
 
 <style>
-  aside { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 64px 12px 12px; background:var(--color-background-sidebar); border-right: 1px solid var(--color-border-sidebar); transition: padding-inline 300ms ease, border-color 300ms ease; }
-  .sidebar-toggle { position: absolute; top: 24px; right: 12px; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; color: var(--color-text-default-secondary); font: inherit; background: transparent; border: 1px solid transparent; border-radius: 8px; box-shadow: 0 0 0 rgb(41 43 57 / 0%); cursor: pointer; transition: right 300ms ease, border-radius 300ms ease, border-color 300ms ease, box-shadow 300ms ease, color 160ms ease, background-color 300ms ease; }
-  .sidebar-toggle:hover { color: var(--color-primary); background: var(--color-primary-background); }
-  .sidebar-toggle .icon-close, .sidebar-toggle .icon-open { flex-shrink: 0; }
-  .sidebar-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-  .sidebar-toggle .icon-close, .sidebar-toggle .icon-open { display: flex; grid-area: 1 / 1; transition: opacity 300ms ease; }
-  .sidebar-toggle .icon-open { opacity: 0; }
-  aside[data-collapsed='true'] .icon-close { opacity: 0; }
-  aside[data-collapsed='true'] .icon-open { opacity: 1; }
-  aside[data-collapsed='true'] { padding-inline: 0; border-right-color: transparent; }
-  aside[data-collapsed='true'] nav,
-  aside[data-collapsed='true'] .version { visibility: hidden; pointer-events: none; }
-  aside[data-collapsed='true'] .sidebar-toggle { right: -40px; background: var(--color-background-sidebar); border-color: var(--color-border-sidebar); border-radius:0px 8px 8px 0px; box-shadow: 0 4px 12px rgb(41 43 57 / 10%); }
-  aside[data-collapsed='true'] .sidebar-toggle:hover { background: var(--color-primary-background); }
-  .nav-heading, nav p, .version { color: var(--color-text-default-secondary); font-size: 12px; }
-  .nav-heading, nav p { padding: 0 12px; }
-  nav p { margin-top: 28px; }
-  nav a { display: inline-flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 12px; border-radius: 8px; }
-  nav a :global(svg) { flex-shrink: 0; }
-  nav a small { margin-left: auto; }
-  nav a:hover { background: var(--color-primary-background); color: var(--color-primary); transition: color 200ms ease, background-color 200ms ease; }
-  .version { margin-top: auto; padding: 30px 12px 0; }
-  [aria-current='true'] { background: var(--color-primary-background); color: var(--color-primary); }
-  @media (prefers-reduced-motion: reduce) {
-    aside, .sidebar-toggle, .sidebar-toggle .icon-close, .sidebar-toggle .icon-open { transition: none; }
+  aside {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 64px 12px 12px;
+    background: var(--color-background-sidebar);
+    border-right: 1px solid var(--color-border-sidebar);
+    transition:
+      padding-inline 300ms ease,
+      border-color 300ms ease;
   }
-
+  .sidebar-toggle {
+    position: absolute;
+    top: 24px;
+    right: 12px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: var(--color-text-default-secondary);
+    font: inherit;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    cursor: pointer;
+    transition:
+      right 300ms ease,
+      border-radius 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease,
+      color 200ms ease,
+      background-color 300ms ease;
+  }
+  .sidebar-toggle:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-background);
+  }
+  .sidebar-toggle .icon-close,
+  .sidebar-toggle .icon-open {
+    flex-shrink: 0;
+  }
+  .sidebar-toggle .icon-close,
+  .sidebar-toggle .icon-open {
+    display: flex;
+    grid-area: 1 / 1;
+    transition: opacity 300ms ease;
+  }
+  .sidebar-toggle .icon-open {
+    opacity: 0;
+  }
+  aside[data-collapsed="true"] .icon-close {
+    opacity: 0;
+  }
+  aside[data-collapsed="true"] .icon-open {
+    opacity: 1;
+  }
+  aside[data-collapsed="true"] {
+    padding-inline: 0;
+    border-right-color: transparent;
+  }
+  aside[data-collapsed="true"] nav,
+  aside[data-collapsed="true"] .version {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  aside[data-collapsed="true"] .sidebar-toggle {
+    right: -40px;
+    background: var(--color-background-sidebar);
+    border-color: var(--color-border-sidebar);
+    border-radius: 0px 8px 8px 0px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  aside[data-collapsed="true"] .sidebar-toggle:hover {
+    background: var(--color-primary-background);
+  }
+  .nav-heading,
+  nav p,
+  .version {
+    color: var(--color-text-default-secondary);
+    font-size: 12px;
+  }
+  .nav-heading,
+  nav p {
+    padding: 0 12px;
+  }
+  nav p {
+    margin-top: 28px;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    transition:
+      color 200ms ease,
+      background-color 200ms ease;
+  }
+  nav a :global(svg) {
+    flex-shrink: 0;
+  }
+  nav a small {
+    margin-left: auto;
+  }
+  nav a:hover {
+    background: var(--color-primary-background);
+    color: var(--color-primary);
+  }
+  .version {
+    margin-top: auto;
+    padding: 30px 12px 0;
+  }
+  [aria-current="true"] {
+    background: var(--color-primary-background);
+    color: var(--color-primary);
+  }
 </style>
+

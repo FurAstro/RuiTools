@@ -1,5 +1,5 @@
 ---
-import { Icon } from 'astro-icon/components';
+import { Icon } from "astro-icon/components";
 ---
 
 <header>
@@ -14,9 +14,40 @@ import { Icon } from 'astro-icon/components';
 </header>
 
 <style>
-  header { display: flex; align-items: center; justify-content: space-between; padding: 22px 32px; background: var(--color-background-header); border-bottom: 1px solid var(--color-border-header); }
-  .brand { font-size: 24px; display: inline-flex; align-items: center; gap: 10px;}
-  .icon-box { display: grid; place-items: center; background: var(--color-primary); color: var(--color-background-header); width: 38px; height: 38px; border-radius: 12px;}
-  .home-link { display: inline-flex; align-items: center; gap: 4px; color: var(--color-primary);}
-  .text { color: var(--color-primary); }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 32px;
+    background: var(--color-background-header);
+    border-bottom: 1px solid var(--color-border-header);
+  }
+  .brand {
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .icon-box {
+    display: grid;
+    place-items: center;
+    background: var(--color-primary);
+    color: var(--color-background-header);
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 200ms ease;
+  }
+  .home-link:hover {
+    color: var(--color-primary);
+    transition: color 200ms ease;
+  }
+  .text {
+    color: var(--color-primary);
+  }
 </style>

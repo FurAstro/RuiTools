@@ -1,0 +1,48 @@
+---
+interface Props {
+  tool: {
+    name: string;
+    description: string;
+    category: string;
+    url: string;
+  };
+  categoryName?: string;
+}
+
+const { tool, categoryName } = Astro.props;
+---
+
+<a class="card" data-tool-category={tool.category} href={tool.url}>
+  <h3>{tool.name}</h3>
+  <p>{tool.description}</p>
+  <small>{categoryName}</small>
+</a>
+
+<style>
+  .card {
+    padding: 22px;
+    border: 1px solid var(--color-border-card);
+    border-radius: 12px;
+    background: var(--color-background-card);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .card:hover ,
+  .card:focus-visible {
+    border-color: var(--color-border-hover-card);
+    transform:  scale(1.03);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+  }
+  h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+  }
+  .card p {
+    color: var(--color-text-default-secondary);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .card small {
+    color: var(--color-text-default-secondary);
+    font-size: 11px;
+  }
+</style>
