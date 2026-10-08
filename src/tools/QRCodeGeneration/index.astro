@@ -1,0 +1,43 @@
+---
+import Generator from './Generator.astro';
+import { kinds } from './kinds';
+---
+<Generator id="qr-generator" >
+  <label>二维码种类<select name="kind">{kinds.map(kind => <option value={kind.id}>{kind.label}</option>)}</select></label>
+  <p class="hint" data-kind-help>{kinds[0].hint}</p>
+  <label>编码内容<textarea name="text" maxlength="2000" required spellcheck="false">RuiTools</textarea></label>
+  <h2>外观设置</h2>
+  <div class="fields">
+    <label>最长边（像素）<input type="number" name="size" value="320" min="64" max="2048" step="1" required /></label>
+    <label>纠错等级<select name="level"><option value="L">L · 低（约 7%）</option><option value="M" selected>M · 标准（约 15%）</option><option value="Q">Q · 较高（约 25%）</option><option value="H">H · 高（约 30%）</option></select></label>
+    <label>前景色<input name="foreground" value="#000000" maxlength="7" pattern="#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?" required spellcheck="false" /></label>
+    <label>背景色<input name="background" value="#FFFFFF" maxlength="7" pattern="#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?" required spellcheck="false" /></label>
+    <label>四周留白（像素）<input type="number" name="margin" value="40" min="0" max="1023" step="1" required /></label>
+  </div>
+  <p class="hint">颜色支持 #RGB / #RRGGBB。最长边包含留白，长方形码保持原始比例，实际宽高显示在预览下方。四边各预留指定像素；设为 0 时不添加留白。</p>
+</Generator>
+<script>
+  import { setupGenerator } from './preview';
+  import { renderQR } from './encoding';
+  import { kinds } from './kinds';
+  const root = document.getElementById('qr-generator');
+  if (root) {
+    const form = root.querySelector('form')!;
+    const kindSelect = form.querySelector<HTMLSelectElement>('[name="kind"]')!;
+    const levelSelect = form.querySelector<HTMLSelectElement>('[name="level"]')!;
+    const help = root.querySelector<HTMLElement>('[data-kind-help]')!;
+    function syncKind() {
+      const kind = kinds.find(item => item.id === kindSelect.value)!;
+      help.textContent = kind.hint;
+      levelSelect.replaceChildren(...(kind.levels.length ? kind.levels : ['ECC 200（自动）']).map(level => new Option(level, level)));
+      levelSelect.disabled = !kind.levels.length;
+      if (kind.levels.length) levelSelect.value = kind.defaultLevel;
+    }
+    kindSelect.addEventListener('input', syncKind);
+    form.addEventListener('reset', () => setTimeout(syncKind, 0));
+    syncKind();
+    setupGenerator(root, renderQR, 'qrcode');
+  }
+</script>
+
+

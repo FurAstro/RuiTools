@@ -1,0 +1,39 @@
+---
+import Generator from './Generator.astro';
+import { formats } from './encoding';
+const groups = [...new Set(formats.map(item => item.group))];
+---
+<Generator id="barcode-generator" >
+  <label>条形码格式<select name="format">{groups.map(group => <optgroup label={group}>{formats.filter(item => item.group === group).map(item => <option value={item.id}>{item.label}</option>)}</optgroup>)}</select></label>
+  <label>编码内容<input name="text" value="RuiTools2026" maxlength="80" required autocomplete="off" spellcheck="false" aria-describedby="barcode-help" /><span id="barcode-help" class="hint">{formats[0].help}</span></label>
+  <button type="button" data-example>填入示例</button>
+  <p class="hint">最多 80 个字符，保留前导零。切换格式后可填入对应示例。</p>
+  <div class="fields">
+    <label>图片宽度（像素）<input type="number" name="width" value="600" min="64" max="2048" step="1" required /></label>
+    <label>图片高度（像素）<input type="number" name="height" value="240" min="64" max="2048" step="1" required /></label>
+    <label>前景色<input name="foreground" value="#000000" maxlength="7" pattern="#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?" required spellcheck="false" /></label>
+    <label>背景色<input name="background" value="#FFFFFF" maxlength="7" pattern="#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?" required spellcheck="false" /></label>
+  </div>
+  <p class="hint">颜色支持 #RGB / #RRGGBB，前景色同时用于码下文字。</p>
+  <p class="hint">宽高范围为 64–2048 像素，包含文字和留白。码图等比居中，剩余区域使用背景色填充。</p>
+  <label class="check"><input type="checkbox" name="showText" checked />显示码下文字</label>
+</Generator>
+<script>
+  import { formats, renderBarcode } from './encoding';
+  import { setupGenerator } from './preview';
+  const root = document.getElementById('barcode-generator');
+  if (root) {
+    const form = root.querySelector('form')!;
+    const select = form.querySelector<HTMLSelectElement>('[name="format"]')!;
+    const input = form.querySelector<HTMLInputElement>('[name="text"]')!;
+    const help = root.querySelector<HTMLElement>('#barcode-help')!;
+    const updateHelp = () => { help.textContent = formats.find(item => item.id === select.value)!.help; };
+    select.addEventListener('change', updateHelp);
+    form.addEventListener('reset', () => setTimeout(updateHelp, 0));
+    root.querySelector('[data-example]')!.addEventListener('click', () => {
+      input.value = formats.find(item => item.id === select.value)!.example;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    setupGenerator(root, renderBarcode, 'barcode');
+  }
+</script>

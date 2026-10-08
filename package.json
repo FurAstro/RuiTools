@@ -6,12 +6,13 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev --base / --background",
+    "dev": "astro dev --base /",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@bwip-js/browser": "^4.11.4",
     "astro": "^7.3.5",
     "astro-icon": "^1.2.0"
   },
